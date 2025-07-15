@@ -143,8 +143,8 @@ class AppTheme {
   }
 
   // Common Components
-  static DialogTheme _dialogTheme() {
-    return const DialogTheme(
+  static DialogThemeData  _dialogTheme() {
+    return const DialogThemeData (
       shape: RoundedRectangleBorder(
         side: BorderSide(color: AppColors.red, width: 1.0),
         borderRadius: BorderRadius.all(Radius.circular(15.0)),

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 class StaffInfoCard extends StatelessWidget {
   final String nip;
   final String name;
-  final String gender;
+  // final String gender;
 
   const StaffInfoCard({
     Key? key,
     required this.nip,
     required this.name,
-    required this.gender, required String position,
+    // required this.gender, 
+    required String position,
   }) : super(key: key);
 
   @override
@@ -32,7 +33,7 @@ class StaffInfoCard extends StatelessWidget {
             _buildDividerRow(),
             _buildTableRow("Nama", name),
             _buildDividerRow(),
-            _buildTableRow("Gender", gender),
+            // _buildTableRow("Gender", gender),
           ],
         ),
       ),

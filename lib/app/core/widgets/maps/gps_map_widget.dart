@@ -18,6 +18,7 @@ class _MapWidgetState extends State<MapWidget> {
   final LatLng schoolLocation = LatLng(-6.349326, 106.776070);
   final double radiusInMeters = 700;
   bool isWithinRadius = false;
+  final MapController mapController = MapController();
 
   @override
   void initState() {
@@ -59,7 +60,7 @@ class _MapWidgetState extends State<MapWidget> {
             children: [
               Expanded(
                 child: FlutterMap(
-                  mapController: MapController(),
+                  mapController: mapController,
                   options: MapOptions(
                     initialCenter: currentLocation!,
                     initialZoom: 15,
@@ -67,7 +68,7 @@ class _MapWidgetState extends State<MapWidget> {
                   children: [
                     TileLayer(
                       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.example.app',
+                      userAgentPackageName: 'com.example.presensi_school',
                     ),
                     MarkerLayer(
                       markers: [
@@ -90,6 +91,18 @@ class _MapWidgetState extends State<MapWidget> {
                             color: Colors.blue,
                             size: 40,
                           ),
+                        ),
+                      ],
+                    ),
+                    CircleLayer(
+                      circles: [
+                        CircleMarker(
+                          point: schoolLocation,
+                          radius: radiusInMeters, // radius in meters
+                          useRadiusInMeter: true,
+                          color: Colors.blue.withOpacity(0.2),
+                          borderColor: Colors.blue,
+                          borderStrokeWidth: 2,
                         ),
                       ],
                     ),

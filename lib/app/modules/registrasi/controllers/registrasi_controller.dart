@@ -12,6 +12,8 @@ class RegistrasiController extends GetxController {
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final nipController = TextEditingController();
+
   final selectedRoleId = ''.obs; // Menyimpan ID role
 
   final users = <User>[].obs;
@@ -95,6 +97,7 @@ class RegistrasiController extends GetxController {
       isLoading(true);
       final roleCode = selectedRole?.code ?? 2; // Ambil code dari role yang dipilih
       final result = await authRepo.register(
+         nip: nipController.text, 
         fullName: fullNameController.text,
         email: emailController.text,
         password: passwordController.text,
@@ -175,6 +178,7 @@ class RegistrasiController extends GetxController {
 
   void clearForm() {
     fullNameController.clear();
+    nipController.clear(); 
     emailController.clear();
     passwordController.clear();
     // Reset ke role pertama jika ada data

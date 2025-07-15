@@ -28,6 +28,7 @@ class ProfileController extends GetxController {
   var usernameController = TextEditingController().obs;
   var noHandphoneController = TextEditingController().obs;
   var alamatController = TextEditingController().obs;
+  var emailController = TextEditingController().obs;
 
   final Rx<File?> profileImage = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
@@ -44,6 +45,7 @@ class ProfileController extends GetxController {
     usernameController.value.dispose();
     noHandphoneController.value.dispose();
     alamatController.value.dispose();
+    emailController.value.dispose();
     super.onClose();
   }
 
@@ -77,31 +79,33 @@ class ProfileController extends GetxController {
 
   /// Fetch profile data from the repository
   Future<void> fetchProfile() async {
-    try {
-      isLoading(true);
-      final userProfile = await _profileRepository.getProfile();
-      if (userProfile != null) {
-        profile.value = userProfile;
+  try {
+    isLoading(true);
+    final userProfile = await _profileRepository.getProfile();
+    if (userProfile != null) {
+      profile.value = userProfile;
 
-        // Update nilai pada controllers
-        usernameController.value.text = userProfile.nama!;
-        noHandphoneController.value.text = userProfile.noHp!;
-        alamatController.value.text = userProfile.alamat!;
+      // Update nilai pada controllers
+      usernameController.value.text = userProfile.nama ?? '';
+      noHandphoneController.value.text = userProfile.noHp ?? '';
+      alamatController.value.text = userProfile.alamat ?? '';
+      emailController.value.text = userProfile.auth?.email ?? '';
 
-        // Update profile image URL
-        profileImageUrl.value = userProfile.image ?? '';
+      // Update profile image URL
+      profileImageUrl.value = userProfile.image ?? '';
 
-        // Simpan nama ke secure storage
-        await _setStorage({"username": userProfile.nama!});
-      } else {
-        Get.snackbar("Error", "Data profil kosong!");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Gagal memuat profil: $e");
-    } finally {
-      isLoading(false);
+      // Simpan nama ke secure storage
+      await _setStorage({"username": userProfile.nama ?? ''});
+    } else {
+      Get.snackbar("Error", "Data profil kosong!");
     }
+  } catch (e) {
+    Get.snackbar("Error", "Gagal memuat profil: $e");
+  } finally {
+    isLoading(false);
   }
+}
+
 
   /// Toggle edit mode and save changes
   Future<void> toggleEditMode() async {

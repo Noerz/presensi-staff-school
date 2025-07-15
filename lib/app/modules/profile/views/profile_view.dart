@@ -98,17 +98,17 @@ class ProfileView extends GetView<ProfileController> {
                                     onTap: () async {
                                       await controller.pickImageFromGallery();
                                     },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
+                                    // child: Container(
+                                    //   padding: const EdgeInsets.all(8),
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.white,
+                                    //     shape: BoxShape.circle,
+                                    //   ),
+                                    //   child: const Icon(
+                                    //     Icons.camera_alt,
+                                    //     color: Colors.black54,
+                                    //   ),
+                                    // ),
                                   ),
                                 ),
                               ],
@@ -193,12 +193,12 @@ class ProfileView extends GetView<ProfileController> {
                                           ),
                                         ),
                                         const SizedBox(width: 8),
-                                        // Expanded(
-                                        //   child: Text(
-                                        //     user.auth.email,
-                                        //     style: const TextStyle(fontSize: 16),
-                                        //   ),
-                                        // ),
+                                        Expanded(
+                                          child: Text(
+                                            user.auth?.email ?? '-',
+                                            style: const TextStyle(fontSize: 16),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),

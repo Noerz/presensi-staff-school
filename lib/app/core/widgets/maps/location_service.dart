@@ -42,6 +42,7 @@ class LocationService {
     return position;
   }
 
+  // ignore: unused_element
   void _showFakeGPSAlert(BuildContext context) {
     showDialog(
       context: context,

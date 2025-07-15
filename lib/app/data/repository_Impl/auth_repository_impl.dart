@@ -54,6 +54,7 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<Map<String, dynamic>> register({
+    required String nip,
     required String fullName,
     required String email,
     required String password,
@@ -63,6 +64,7 @@ class AuthRepositoryImpl extends AuthRepository {
       final response = await client.post(
         Endpoints.register,
         data: {
+          'nip': nip,
           'nama': fullName,
           'email': email,
           'password': password,

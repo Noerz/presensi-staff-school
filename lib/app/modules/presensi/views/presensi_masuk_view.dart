@@ -96,15 +96,15 @@ class PresensiMasukView extends GetView<PresensiController> {
                             controller.nip.value.isNotEmpty
                                 ? controller.nip.value
                                 : 'NIP tidak tersedia';
-                        final gender =
-                            controller.gender.value.isNotEmpty
-                                ? controller.gender.value
-                                : 'Jenis kelamin tidak tersedia';
+                        // final gender =
+                        //     controller.gender.value.isNotEmpty
+                        //         ? controller.gender.value
+                        //         : 'Jenis kelamin tidak tersedia';
                         return StaffInfoCard(
                           name: nama,
                           position: "Staff Sekolah",
                           nip: nip,
-                          gender: gender,
+                          // gender: gender,
                         );
                       }),
 

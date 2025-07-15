@@ -30,7 +30,7 @@ class _TimePickerFieldState extends State<TimePickerField> {
               surface: Colors.white,
               onSurface: Colors.black,
             ),
-            dialogTheme: const DialogTheme(
+            dialogTheme: const DialogThemeData (
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),

@@ -52,6 +52,25 @@ class RegistrasiView extends GetView<RegistrasiController> {
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
+                        controller: controller.nipController,
+                        decoration: InputDecoration(
+                          labelText: 'NIP',
+                          prefixIcon: const Icon(Icons.badge),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter NIP';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
                         controller: controller.fullNameController,
                         decoration: InputDecoration(
                           labelText: 'Full Name',
@@ -194,59 +213,59 @@ class RegistrasiView extends GetView<RegistrasiController> {
             ),
             const SizedBox(height: 20),
             // List Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'User List',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                  Obx(
-                    () => Text(
-                      'Total: ${controller.users.length}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            // List Section
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       const Text(
+            //         'User List',
+            //         style: TextStyle(
+            //           fontSize: 16,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.deepPurple,
+            //         ),
+            //       ),
+            //       Obx(
+            //         () => Text(
+            //           'Total: ${controller.users.length}',
+            //           style: const TextStyle(color: Colors.grey),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 12),
+            // // List Section
+            // Expanded(
+            //   child: Obx(() {
+            //     if (controller.isLoading.value) {
+            //       return const Center(child: CircularProgressIndicator());
+            //     }
 
-                if (controller.users.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No users found',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  );
-                }
+            //     if (controller.users.isEmpty) {
+            //       return const Center(
+            //         child: Text(
+            //           'No users found',
+            //           style: TextStyle(color: Colors.grey),
+            //         ),
+            //       );
+            //     }
 
-                return RefreshIndicator(
-                  onRefresh: controller.loadData,
-                  child: ListView.builder(
-                    itemCount: controller.users.length,
-                    itemBuilder: (context, index) {
-                      final user = controller.users[index];
-                      final role = controller.getRoleName(user.roleCode!);
+            //     return RefreshIndicator(
+            //       onRefresh: controller.loadData,
+            //       child: ListView.builder(
+            //         itemCount: controller.users.length,
+            //         itemBuilder: (context, index) {
+            //           final user = controller.users[index];
+            //           final role = controller.getRoleName(user.roleCode!);
 
-                      return _buildUserCard(user, role);
-                    },
-                  ),
-                );
-              }),
-            ),
+            //           return _buildUserCard(user, role);
+            //         },
+            //       ),
+            //     );
+            //   }),
+            // ),
           ],
         ),
       ),

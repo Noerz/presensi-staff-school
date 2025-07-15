@@ -4,6 +4,7 @@ abstract class AuthRepository {
   Future<User> login({required String username, required String password});
 
   Future<Map<String, dynamic>> register({
+    required String nip,
     required String fullName,
     required String email,
     required String password,

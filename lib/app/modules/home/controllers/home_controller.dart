@@ -67,7 +67,7 @@ class HomeController extends GetxController {
   Future<void> fetchSchoolTimes() async {
     try {
       final school = await _schoolRepository.getSchoolById(
-        'b397b69d-6d0b-4f7d-99bd-120eff8bc388',
+        '5c2fe877-dc5a-4c47-a46e-056b0c127517',
       );
       inTime.value = school.inTime;
       outTime.value = school.outTime;

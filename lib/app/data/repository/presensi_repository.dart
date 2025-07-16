@@ -11,4 +11,10 @@ abstract class PresensiRepository {
   Future<Presensi?> getPresensiById(String idPresensi);
 
   Future<List<Presensi>> getPresensiByUser({int? page, int? limit});
+
+  Future<String?> exportPresensiToExcel({
+    int? bulan,
+    int? tahun,
+    String? userId,
+  });
 }

@@ -126,8 +126,13 @@ class HomeController extends GetxController {
           ),
           MenuItem(
             label: "Kelola User",
-            iconPath: "assets/images/person.png",
+            iconPath: "assets/icon/management.png",
             route: "/registrasi",
+          ),
+          MenuItem(
+            label: "Rekap Presensi",
+            iconPath: "assets/icon/file-export.png",
+            route: "/export",
           ),
         ];
     }

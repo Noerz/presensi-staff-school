@@ -12,6 +12,7 @@ abstract class Routes {
   static const SCHOOL = _Paths.SCHOOL;
   static const REGISTRASI = _Paths.REGISTRASI;
   static const HISTORY = _Paths.HISTORY;
+  static const EXPORT = _Paths.EXPORT;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const SCHOOL = '/school';
   static const REGISTRASI = '/registrasi';
   static const HISTORY = '/history';
+  static const EXPORT = '/export';
 }

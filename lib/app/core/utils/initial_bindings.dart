@@ -13,6 +13,7 @@ import 'package:presensi_school/app/data/repository_Impl/presensi_repository_imp
 import 'package:presensi_school/app/data/repository_Impl/profile_repository_impl.dart';
 import 'package:presensi_school/app/data/repository_Impl/role_repository_impl.dart';
 import 'package:presensi_school/app/data/repository_Impl/school_repository_impl.dart';
+import 'package:presensi_school/app/modules/export/controllers/export_controller.dart';
 import 'package:presensi_school/app/modules/home/controllers/home_controller.dart';
 import 'package:presensi_school/app/modules/profile/controllers/profile_controller.dart';
 import 'package:presensi_school/app/modules/school/controllers/school_controller.dart';
@@ -72,5 +73,6 @@ class InitialBindings extends Bindings {
     Get.put(ProfileController(), permanent: true);
     Get.put(HomeController(), permanent: true);
     Get.put(SchoolController(), permanent: true);
+    Get.put(ExportController(), permanent: true);
   }
 }

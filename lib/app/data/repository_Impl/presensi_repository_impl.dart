@@ -132,7 +132,7 @@ class PresensiRepositoryImpl extends PresensiRepository {
       final token = await storage.read(key: Keys.token);
       final response = await client.get(
         Endpoints.getPresensiByUser,
-        queryParameters: {'page': 1, 'limit': limit ?? 10},
+        queryParameters: {'page': page ?? 1, 'limit': limit ?? 10},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 

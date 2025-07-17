@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:presensi_school/app/core/const/endpoints.dart';
+import 'package:presensi_school/app/core/const/keys.dart';
 import 'package:presensi_school/app/data/models/user_model.dart';
 import 'package:presensi_school/app/data/repository/auth_repository.dart';
 
@@ -102,6 +103,22 @@ class AuthRepositoryImpl extends AuthRepository {
       rethrow;
     } catch (e) {
       return false;
+    }
+  }
+
+  @override
+  Future<List<User>> getAllUsers() async {
+    try {
+      final token = await storage.read(key: Keys.token);
+      final response = await client.get(
+        Endpoints.getAllUsers,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      ); // contoh: '/auth/users'
+
+      final List<dynamic> data = response.data['data'];
+      return data.map((json) => User.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception("Failed to load users: $e");
     }
   }
 }

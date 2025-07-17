@@ -11,5 +11,7 @@ abstract class AuthRepository {
     required int roleCode,
   });
 
+  Future<List<User>> getAllUsers(); // << Tambahkan ini
+
   Future<bool> validateToken(String token); // 👈 untuk validasi token
 }

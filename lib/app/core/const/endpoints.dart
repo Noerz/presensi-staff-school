@@ -2,6 +2,7 @@ abstract class Endpoints {
   // Authentication
   static const String login = '/api/v1/login';
   static const String register = '/api/v1/register';
+  static const String getAllUsers = '/api/v1/users'; // Endpoint to get all users
   static const String roles = '/api/v1/role';
   static const String profile = '/api/v1/profile';
   static const String presensi = '/api/v1/presensi';

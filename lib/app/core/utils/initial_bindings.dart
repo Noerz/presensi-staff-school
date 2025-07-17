@@ -70,9 +70,9 @@ class InitialBindings extends Bindings {
 
     // Inisialisasi controller global (injection wajib diletakkan diakhir)
     Get.put(AuthController(), permanent: true);
-    Get.put(ProfileController(), permanent: true);
+    Get.lazyPut(() => ProfileController(), fenix: true);
     Get.put(HomeController(), permanent: true);
-    Get.put(SchoolController(), permanent: true);
-    Get.put(ExportController(), permanent: true);
+    Get.lazyPut(() => SchoolController(), fenix: true);
+    Get.lazyPut(() => ExportController(), fenix: true);
   }
 }

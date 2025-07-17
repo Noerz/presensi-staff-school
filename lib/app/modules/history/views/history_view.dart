@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:presensi_school/app/widgets/custom_bottom_navigation_bar.dart';
 import '../controllers/history_controller.dart';
-import 'package:intl/intl.dart';
+import 'package:presensi_school/app/data/models/presensi_model.dart';
 
 class HistoryView extends GetView<HistoryController> {
   const HistoryView({super.key});
@@ -19,41 +20,34 @@ class HistoryView extends GetView<HistoryController> {
         elevation: 0.5,
       ),
       body: RefreshIndicator(
-        onRefresh: () async => await controller.fetchPresensi(),
+        onRefresh: () => controller.fetchPresensi(reset: true),
         child: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.blue,
-              ),
-            );
+          if (controller.isLoading.value && controller.presensiList.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (controller.presensiList.isEmpty) {
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Center(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/icon/empty_history.png', // Ganti dengan asset Anda
-                        height: 200,
-                      ),
+                      Image.asset('assets/icon/empty_history.png', height: 200),
                       const SizedBox(height: 24),
-                      const Text(
+                      Text(
                         "Belum Ada Riwayat Presensi",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey,
+                          color: Colors.grey.shade600,
                         ),
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        "Riwayat presensi Anda akan muncul di sini",
+                        "Riwayat presensi Anda akan muncul di sini.",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey),
                       ),
@@ -65,99 +59,116 @@ class HistoryView extends GetView<HistoryController> {
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            itemCount: controller.presensiList.length,
+            controller: controller.scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            itemCount: controller.presensiList.length + 1,
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (_, index) {
-              final presensi = controller.presensiList[index];
-              final date = DateTime.parse(presensi.inTime ?? '');
-              final isToday = DateTime.now().difference(date).inDays == 0;
+              if (index < controller.presensiList.length) {
+                final presensi = controller.presensiList[index];
+                final date =
+                    DateTime.tryParse(presensi.inTime ?? '') ?? DateTime.now();
+                final isToday = DateTime.now().difference(date).inDays == 0;
 
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            isToday ? Colors.blue.shade50 : Colors.grey.shade50,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today,
-                            size: 16,
-                            color: isToday ? Colors.blue : Colors.grey,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            isToday
-                                ? "Hari Ini"
-                                : DateFormat('EEEE', 'id_ID').format(date),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  isToday ? Colors.blue : Colors.grey.shade700,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            DateFormat('dd MMM yyyy', 'id_ID').format(date),
-                            style: TextStyle(color: Colors.grey.shade600),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          _buildTimeCard(
-                            title: "Masuk",
-                            time: presensi.inTime?.split(" ").last ?? '-',
-                            status: presensi.inKeterangan ?? '-',
-                            isSuccess: presensi.inKeterangan == "Hadir",
-                          ),
-                          const SizedBox(width: 16),
-                          const Icon(Icons.more_horiz, color: Colors.grey),
-                          const SizedBox(width: 24),
-                          _buildTimeCard(
-                            title: "Keluar",
-                            time: presensi.outTime?.split(" ").last ?? '-',
-                            status: presensi.outKeterangan ?? '-',
-                            isSuccess: presensi.outKeterangan == "Hadir",
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
+                return _buildPresensiCard(presensi, date, isToday);
+              } else {
+                return Obx(
+                  () =>
+                      controller.isFetchingMore.value
+                          ? const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Center(child: CircularProgressIndicator()),
+                          )
+                          : const SizedBox.shrink(),
+                );
+              }
             },
           );
         }),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
+    );
+  }
+
+  Widget _buildPresensiCard(Presensi presensi, DateTime date, bool isToday) {
+    final cardColor = isToday ? Colors.blue.shade50 : Colors.grey.shade100;
+    final titleText =
+        isToday ? 'Hari Ini' : DateFormat('EEEE', 'id_ID').format(date);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Header tanggal
+          Container(
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            child: Row(
+              children: [
+                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text(
+                  titleText,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: isToday ? Colors.blue : Colors.grey.shade700,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  DateFormat('dd MMM yyyy', 'id_ID').format(date),
+                  style: TextStyle(color: Colors.grey.shade600),
+                ),
+              ],
+            ),
+          ),
+
+          // Konten presensi
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildTimeCard(
+                    title: "Masuk",
+                    time: presensi.inTime?.split(" ").last ?? '-',
+                    status: presensi.inKeterangan ?? '-',
+                    isSuccess: presensi.inKeterangan == "Hadir",
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Icon(Icons.more_horiz, color: Colors.grey),
+                ),
+                Expanded(
+                  child: _buildTimeCard(
+                    title: "Keluar",
+                    time: presensi.outTime?.split(" ").last ?? '-',
+                    status: presensi.outKeterangan ?? '-',
+                    isSuccess: presensi.outKeterangan == "Hadir",
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -167,51 +178,49 @@ class HistoryView extends GetView<HistoryController> {
     required String status,
     required bool isSuccess,
   }) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+    final statusColor = isSuccess ? Colors.green : Colors.orange;
+    final bgColor = isSuccess ? Colors.green.shade50 : Colors.orange.shade50;
+    final icon = isSuccess ? Icons.check_circle : Icons.info;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          time,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(6),
           ),
-          const SizedBox(height: 4),
-          Text(
-            time,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-            decoration: BoxDecoration(
-              color: isSuccess ? Colors.green.shade50 : Colors.orange.shade50,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isSuccess ? Icons.check_circle : Icons.info,
-                  size: 12,
-                  color: isSuccess ? Colors.green : Colors.orange,
-                ),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isSuccess ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 14, color: statusColor),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  status,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: statusColor,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
